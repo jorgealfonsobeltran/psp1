@@ -2,11 +2,32 @@ package edu.uniandes.ecos;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
-import edu.uniandes.ecos.*;
+
 
 
 public class Operations {
 
+	public double promedio(LinkedList<Double> lista){
+		double suma=0,resultado=0;
+		for(Double valor : lista){
+			suma+=valor;
+		}
+		resultado=suma/lista.size();
+		BigDecimal decimal=new BigDecimal(resultado);
+		resultado=Double.parseDouble(decimal.setScale(2,decimal.ROUND_HALF_UP).toString());
+		return resultado;
+	}
+	public double desviacion(LinkedList<Double> lista){
+		double sumaDispersion=0,resultado=0;
+		double valorPromedio=promedio(lista);
+		for(double valor : lista){
+			sumaDispersion+=Math.pow(valor-valorPromedio,2);
+		}
+		resultado=Math.sqrt(sumaDispersion/(lista.size()-1));
+		BigDecimal decimal=new BigDecimal(resultado);
+		resultado=Double.parseDouble(decimal.setScale(2,decimal.ROUND_HALF_UP).toString());
+		return resultado;
+	}
 	/**
 	 * 
 	 * @param lista
@@ -51,7 +72,6 @@ public class Operations {
 	 */
 	public double beta1(LinkedList<LinkedList<Double>> lista){
 		double b1;
-		Estadisticas estadisticas=new Estadisticas();
 		LinkedList<Double> listaMultiplicacionXY=new LinkedList<Double>();
 		LinkedList<Double> listaCuadradoX=new LinkedList<Double>();
 		double promedioX=0;
@@ -64,8 +84,8 @@ public class Operations {
 			listaX.add(valor.getFirst());
 			listaY.add(valor.getLast());
 		}
-		promedioX=estadisticas.promedio(listaX);
-		promedioY=estadisticas.promedio(listaY);
+		promedioX=promedio(listaX);
+		promedioY=promedio(listaY);
 		b1=(sumatoria(listaMultiplicacionXY)-(promedioX*promedioY*lista.size()))/(sumatoria(listaCuadradoX)-(Math.pow(promedioX,2)*lista.size()));
 		return b1;
 	}
@@ -82,7 +102,6 @@ public class Operations {
 		double b0;
 		double promedioX=0;
 		double promedioY=0;
-		Estadisticas estadisticas=new Estadisticas();
 		LinkedList<Double> listaX=new LinkedList<Double>();
 		LinkedList<Double> listaY=new LinkedList<Double>();
 		if(b1==0){
@@ -92,8 +111,8 @@ public class Operations {
 			listaX.add(valor.getFirst());
 			listaY.add(valor.getLast());
 		}
-		promedioX=estadisticas.promedio(listaX);
-		promedioY=estadisticas.promedio(listaY);
+		promedioX=promedio(listaX);
+		promedioY=promedio(listaY);
 		b0=promedioY-(promedioX*b1);
 		return b0;
 	}
